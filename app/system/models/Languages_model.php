@@ -16,7 +16,7 @@ class Languages_model extends Language
 
     protected $purgeable = ['translations'];
 
-    public $casts = [
+    protected $casts = [
         'original_id' => 'integer',
         'status' => 'boolean',
     ];
@@ -47,6 +47,11 @@ class Languages_model extends Language
      * @var self Default language cache.
      */
     protected static $defaultLanguage;
+
+    /**
+     * @var self Active language cache.
+     */
+    protected static $activeLanguage;
 
     public static function applySupportedLanguages()
     {
@@ -146,6 +151,19 @@ class Languages_model extends Language
     public function isDefault()
     {
         return $this->code == setting('default_language');
+    }
+
+    public static function getActiveLocale()
+    {
+        if (self::$activeLanguage !== null) {
+            return self::$activeLanguage;
+        }
+
+        $activeLanguage = self::isEnabled()
+            ->where('code', app()->getLocale())
+            ->first();
+
+        return self::$activeLanguage = $activeLanguage;
     }
 
     public static function listSupported()

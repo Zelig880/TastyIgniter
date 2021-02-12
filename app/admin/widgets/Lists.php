@@ -5,6 +5,7 @@ namespace Admin\Widgets;
 use Admin\Classes\BaseWidget;
 use Admin\Classes\ListColumn;
 use Admin\Facades\AdminAuth;
+use Admin\Traits\LocationAwareWidget;
 use Carbon\Carbon;
 use DB;
 use Exception;
@@ -17,6 +18,8 @@ use Model;
 
 class Lists extends BaseWidget
 {
+    use LocationAwareWidget;
+
     /**
      * @var array List column configuration.
      */
@@ -773,7 +776,7 @@ class Lists extends BaseWidget
 
         $dateTime = $this->validateDateTimeValue($value, $column);
 
-        $format = $column->format ?? setting('date_format').' '.setting('time_format');
+        $format = $column->format ?? lang('system::lang.php.date_time_format');
         $format = parse_date_format($format);
 
         return $dateTime->format($format);
@@ -790,7 +793,7 @@ class Lists extends BaseWidget
 
         $dateTime = $this->validateDateTimeValue($value, $column);
 
-        $format = $column->format ?? setting('time_format');
+        $format = $column->format ?? lang('system::lang.php.time_format');
         $format = parse_date_format($format);
 
         return $dateTime->format($format);
@@ -807,7 +810,7 @@ class Lists extends BaseWidget
 
         $dateTime = $this->validateDateTimeValue($value, $column);
 
-        $format = $column->format ?? setting('date_format');
+        $format = $column->format ?? lang('system::lang.php.date_format');
         $format = parse_date_format($format);
 
         return $format

@@ -282,21 +282,15 @@ class Themes extends \Admin\Classes\AdminController
         if (!$loaded)
             return;
 
-        Event::listen('assets.combiner.beforePrepare', function (AssetsManager $combiner, $assets) {
+        Event::listen('assets.combiner.beforePrepare', function (AssetsManager $combiner, $assets) use ($theme) {
             ThemeManager::applyAssetVariablesOnCombinerFilters(
-                array_flatten($combiner->getFilters())
+                array_flatten($combiner->getFilters()), $theme
             );
         });
 
         try {
-            $output = '';
             Artisan::call('igniter:util', ['name' => 'compile scss']);
-            $output .= Artisan::output();
-
             Artisan::call('igniter:util', ['name' => 'compile js']);
-            $output .= Artisan::output();
-
-            Log::info($output);
         }
         catch (Exception $ex) {
             Log::error($ex);
